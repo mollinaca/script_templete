@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-import sys,os
-import pathlib
+import os
 import configparser
-import urllib.request
+import urllib.request, urllib.error, urllib.parse
 import json
 import time
 
 def loadconf ():
-    global token, webhook, webhook_dev
+    global token, webhook
 
     cfg = configparser.ConfigParser ()
     cfg_file = os.path.dirname(__file__) + '/config.ini'
@@ -51,7 +50,7 @@ class Exec_api:
                     body = json.loads(res.read().decode('utf-8'))
             except urllib.error.URLError as err:
                 err_d = {'reason': str(err.reason)}
-                res = {'ok': False, 'err':err_d}
+                body = {'ok': False, 'err':err_d}
 
         return body
 
@@ -75,7 +74,7 @@ class Api:
         """
         url = "https://slack.com/api/auth.test"
         params = {
-            'token': token,
+            'token': token
         }
 
         req = urllib.request.Request('{}?{}'.format(url, urllib.parse.urlencode(params)))
@@ -86,10 +85,8 @@ class Api:
 def main ():
 
     loadconf ()
-    print (f'{token=}')
-    print (f'{webhook=}')
-
     api = Api ()
+
     print ("== api.test ==")
     res = api.api_test ()
     print (json.dumps(res, indent=4))
@@ -97,6 +94,7 @@ def main ():
     print ("== auth.test ==")
     res = api.auth_test ()
     print (json.dumps(res, indent=4))
+
 
 if __name__ == '__main__':
     main ()
