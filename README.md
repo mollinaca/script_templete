@@ -18,3 +18,4 @@ Slack WEB API refs: https://api.slack.com/web
 
 3. write scripts in `main ()`
 
+4. run `main.py`
